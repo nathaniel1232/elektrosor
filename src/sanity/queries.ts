@@ -61,3 +61,22 @@ export async function getReferanser(featuredOnly = false) {
     { next: { tags: ["referanse"] } }
   );
 }
+
+// Testimonials
+export async function getTestimonials() {
+  if (!client) return null;
+  return client.fetch(
+    `*[_type == "testimonial" && featured == true] | order(order asc) {
+      _id,
+      name,
+      role,
+      initials,
+      rating,
+      text,
+      featured,
+      order
+    }`,
+    {},
+    { next: { tags: ["testimonial"] } }
+  );
+}

@@ -11,6 +11,7 @@ import {
   ArrowRightIcon,
   BoltIcon,
 } from "@/components/Icons";
+import { getTestimonials } from "@/sanity/queries";
 
 export const metadata: Metadata = {
   title: "Elektro Sør AS – Din lokale elektriker i Mandal",
@@ -82,7 +83,53 @@ const certs = [
   "Godkjent for ansvarsrett",
 ];
 
-export default function Home() {
+const FALLBACK_TESTIMONIALS = [
+  {
+    _id: "1",
+    name: "Marius Romedal",
+    role: "Privatkunde",
+    initials: "MR",
+    rating: 5,
+    text: "Veldig god service og de holder det de lover. Kjempefornøyd med kvalitet på produktene og utført jobb.",
+    featured: true,
+    order: 0,
+  },
+  {
+    _id: "2",
+    name: "Ingrid Hansen",
+    role: "Bedriftseier",
+    initials: "IH",
+    rating: 5,
+    text: "Profesjonell gjeng som vet hva de gjør. Anbefaler sterkt til alle som trenger elektriker.",
+    featured: true,
+    order: 1,
+  },
+  {
+    _id: "3",
+    name: "Johan Eriksen",
+    role: "Næringsvirksomhet",
+    initials: "JE",
+    rating: 5,
+    text: "Løste komplisert elektroproblem på kort tid. Ung, dyktig og pålitelig. Takk!",
+    featured: true,
+    order: 2,
+  },
+  {
+    _id: "4",
+    name: "Maria Andersen",
+    role: "Privatkunde",
+    initials: "MA",
+    rating: 5,
+    text: "Ryddig, effektivt og gode priser. Vil absolutt bruke dem igjen.",
+    featured: true,
+    order: 3,
+  },
+];
+
+export default async function Home() {
+  const testimonials = (await getTestimonials()) || FALLBACK_TESTIMONIALS;
+  const displayTestimonial = testimonials[0] || FALLBACK_TESTIMONIALS[0];
+
   return (
     <>
       {/* ── HERO ── */}
@@ -280,16 +327,16 @@ export default function Home() {
               <div className="bg-white rounded-2xl p-7 border border-gray-100 shadow-sm relative overflow-hidden">
                 <div className="absolute top-3 right-5 text-7xl text-blue-50 font-serif leading-none select-none">&rdquo;</div>
                 <div className="flex gap-1 mb-4">
-                  {[...Array(5)].map((_, i) => <StarIcon key={i} className="w-4 h-4 text-red-500" />)}
+                  {[...Array(displayTestimonial.rating || 5)].map((_, i) => <StarIcon key={i} className="w-4 h-4 text-red-500" />)}
                 </div>
                 <p className="text-gray-700 leading-relaxed mb-5 relative z-10">
-                  Veldig god service og de holder det de lover. Kjempefornøyd med kvalitet på produktene og utført jobb.
+                  {displayTestimonial.text}
                 </p>
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 bg-blue-900 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">MR</div>
+                  <div className="w-9 h-9 bg-blue-900 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">{displayTestimonial.initials}</div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-900">Marius Romedal</p>
-                    <p className="text-xs text-gray-400">Privatkunde</p>
+                    <p className="text-sm font-semibold text-gray-900">{displayTestimonial.name}</p>
+                    <p className="text-xs text-gray-400">{displayTestimonial.role}</p>
                   </div>
                 </div>
               </div>

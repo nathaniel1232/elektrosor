@@ -8,10 +8,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
           {/* Brand */}
           <div>
-            <div className="font-bold text-xl text-white mb-3">
-              <span className="text-red-400">Elektro</span>
-              <span> Sør AS</span>
-            </div>
+            <img src="/images/logo.svg" alt="Elektro Sør" className="h-10 w-auto mb-3" />
             <p className="text-sm leading-relaxed text-blue-200">
               Din lokale elektriker i Mandalsregionen siden oppstarten. Vi tar på oss alt fra enkle installasjoner til store industriprosjekter.
             </p>

@@ -1,0 +1,12 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Blue background -->
+  <rect width="200" height="200" fill="#001f5c" rx="12"/>
+  
+  <!-- Lightning bolt (main icon) -->
+  <g fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="100,30 50,120 100,120 60,170 100,100 140,100 160,50 100,100"/>
+  </g>
+  
+  <!-- Red accent -->
+  <circle cx="160" cy="40" r="18" fill="#dc2626"/>
+</svg>
