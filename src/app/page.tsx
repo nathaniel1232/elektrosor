@@ -11,7 +11,8 @@ import {
   ArrowRightIcon,
   BoltIcon,
 } from "@/components/Icons";
-import { getTestimonials } from "@/sanity/queries";
+import { getTestimonials, getSertifiseringer, getFeaturedReferanser, getSiteSettings } from "@/sanity/queries";
+import { urlFor } from "@/sanity/image";
 
 export const metadata: Metadata = {
   title: "Elektro Sør AS – Din lokale elektriker i Mandal",
@@ -64,12 +65,18 @@ const steps = [
   { num: "03", title: "Jobben utføres", desc: "Sertifiserte fagarbeidere utfører jobben ryddig og effektivt. Vi rydder opp etter oss." },
 ];
 
-const certs = [
+const FALLBACK_CERTS = [
   "Registrert El-installatør",
   "Godkjent lærebedrift",
   "Registrert EKOM-installatør",
   "Sertifisert KNX Partner",
   "Godkjent for ansvarsrett",
+];
+
+const FALLBACK_REFS = [
+  { _id: "r1", title: "GE Healthcare", description: "Utbygging av elektrisk anlegg ved fabrikker i Ramslandsvågen", category: "industri", location: "Spangereid", image: null },
+  { _id: "r2", title: "Mandal Fengsel", description: "Elektrotekniske installasjoner i forbindelse med bygging", category: "offentlig", location: "Mandal", image: null },
+  { _id: "r3", title: "Mandal Golfklubb", description: "Elektriske arbeider på klubbhus og anlegg", category: "naring", location: "Mandal", image: null },
 ];
 
 const FALLBACK_TESTIMONIALS = [
@@ -116,8 +123,20 @@ const FALLBACK_TESTIMONIALS = [
 ];
 
 export default async function Home() {
-  const testimonials = (await getTestimonials()) || FALLBACK_TESTIMONIALS;
-  const displayTestimonial = testimonials[0] || FALLBACK_TESTIMONIALS[0];
+  const [testimonials, sertifiseringer, featuredRefs, siteSettings] = await Promise.all([
+    getTestimonials(),
+    getSertifiseringer(),
+    getFeaturedReferanser(),
+    getSiteSettings(),
+  ]);
+
+  const allTestimonials = testimonials?.length ? testimonials : FALLBACK_TESTIMONIALS;
+  const displayTestimonial = allTestimonials[0];
+  const certs = sertifiseringer?.length ? sertifiseringer : null;
+  const refs = featuredRefs?.length ? featuredRefs : FALLBACK_REFS;
+
+  const heroImageUrl = siteSettings?.heroImage ? urlFor(siteSettings.heroImage).width(600).height(600).url() : null;
+  const aboutImageUrl = siteSettings?.aboutImage ? urlFor(siteSettings.aboutImage).width(700).height(500).url() : null;
 
   return (
     <>
@@ -164,16 +183,24 @@ export default async function Home() {
 
             {/* Hero image */}
             <div className="hidden lg:block relative">
-              <ImagePlaceholder
-                label="Legg til bilde via admin"
-                className="rounded-2xl h-96 w-full shadow-2xl shadow-blue-950/50"
-              />
+              {heroImageUrl ? (
+                <img
+                  src={heroImageUrl}
+                  alt="Elektro Sør – elektriker i arbeid"
+                  className="rounded-2xl h-96 w-full object-cover shadow-2xl shadow-blue-950/50"
+                />
+              ) : (
+                <ImagePlaceholder
+                  label="Last opp bilde i Redaksjonsverktøyet → Innstillinger"
+                  className="rounded-2xl h-96 w-full shadow-2xl shadow-blue-950/50"
+                />
+              )}
               <div className="absolute -bottom-5 left-6 bg-white rounded-xl shadow-xl p-4 w-56 border border-gray-100">
                 <div className="flex items-center gap-1 mb-1">
-                  {[...Array(5)].map((_, i) => <StarIcon key={i} className="w-3.5 h-3.5 text-red-500" />)}
+                  {[...Array(displayTestimonial.rating || 5)].map((_, i) => <StarIcon key={i} className="w-3.5 h-3.5 text-red-500" />)}
                 </div>
-                <p className="text-xs text-gray-600 leading-snug">&ldquo;Kjempefornøyd – raskt og ryddig!&rdquo;</p>
-                <p className="text-xs font-semibold text-gray-900 mt-1.5">Marius Romedal</p>
+                <p className="text-xs text-gray-600 leading-snug">&ldquo;{displayTestimonial.text.slice(0, 60)}{displayTestimonial.text.length > 60 ? "…" : ""}&rdquo;</p>
+                <p className="text-xs font-semibold text-gray-900 mt-1.5">{displayTestimonial.name}</p>
               </div>
             </div>
           </div>
@@ -268,10 +295,18 @@ export default async function Home() {
       <section className="py-16 bg-blue-900 text-white overflow-hidden">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <ImagePlaceholder
-              label="Legg til bilde av team/kontor"
-              className="rounded-2xl h-72 lg:h-96 w-full"
-            />
+            {aboutImageUrl ? (
+              <img
+                src={aboutImageUrl}
+                alt="Elektro Sør – team og kontor"
+                className="rounded-2xl h-72 lg:h-96 w-full object-cover"
+              />
+            ) : (
+              <ImagePlaceholder
+                label="Last opp 'Om oss'-bilde i Redaksjonsverktøyet → Innstillinger"
+                className="rounded-2xl h-72 lg:h-96 w-full"
+              />
+            )}
             <div>
               <span className="text-xs font-bold uppercase tracking-widest text-red-400">Om oss</span>
               <h2 className="text-2xl md:text-3xl font-bold text-white mt-2 mb-4">Lokal elektriker – siden starten</h2>
@@ -333,24 +368,29 @@ export default async function Home() {
               <span className="text-xs font-bold uppercase tracking-widest text-red-500">Referanser</span>
               <h2 className="text-xl font-bold text-gray-900 mt-1 mb-5">Noen prosjekter vi er stolte av</h2>
               <div className="space-y-3">
-                {[
-                  { name: "GE Healthcare", desc: "Utbygging av elektrisk anlegg ved fabrikker i Ramslandsvågen", tag: "Industri" },
-                  { name: "Mandal Fengsel", desc: "Elektrotekniske installasjoner i forbindelse med bygging", tag: "Offentlig" },
-                  { name: "Mandal Golfklubb", desc: "Elektriske arbeider på klubbhus og anlegg", tag: "Næring" },
-                ].map((proj) => (
-                  <div key={proj.name} className="bg-white rounded-xl border border-gray-100 overflow-hidden flex card-hover">
-                    <div className="w-14 flex-shrink-0 bg-gradient-to-b from-blue-800 to-blue-900 flex items-center justify-center">
-                      <BoltIcon className="w-5 h-5 text-blue-300 opacity-50" />
-                    </div>
-                    <div className="px-4 py-3 flex-1">
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <p className="font-semibold text-gray-900 text-sm">{proj.name}</p>
-                        <span className="text-[10px] font-medium bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">{proj.tag}</span>
+                {refs.map((proj) => {
+                  const catLabels: Record<string, string> = { industri: "Industri", offentlig: "Offentlig", naring: "Næring", privat: "Privat" };
+                  const tag = catLabels[proj.category] ?? proj.category;
+                  const imgUrl = proj.image ? urlFor(proj.image).width(56).height(56).url() : null;
+                  return (
+                    <div key={proj._id} className="bg-white rounded-xl border border-gray-100 overflow-hidden flex card-hover">
+                      <div className="w-14 flex-shrink-0 bg-gradient-to-b from-blue-800 to-blue-900 flex items-center justify-center overflow-hidden">
+                        {imgUrl ? (
+                          <img src={imgUrl} alt={proj.title} className="w-full h-full object-cover" />
+                        ) : (
+                          <BoltIcon className="w-5 h-5 text-blue-300 opacity-50" />
+                        )}
                       </div>
-                      <p className="text-gray-500 text-xs leading-snug">{proj.desc}</p>
+                      <div className="px-4 py-3 flex-1">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <p className="font-semibold text-gray-900 text-sm">{proj.title}</p>
+                          <span className="text-[10px] font-medium bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">{tag}</span>
+                        </div>
+                        <p className="text-gray-500 text-xs leading-snug">{proj.description}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
                 <Link href="/referanser" className="inline-flex items-center gap-1.5 text-blue-800 hover:text-red-600 text-sm font-semibold mt-1 transition-colors">
                   Se alle referanser <ArrowRightIcon className="w-3.5 h-3.5" />
                 </Link>
@@ -390,7 +430,22 @@ export default async function Home() {
             Sertifiseringer og godkjenninger
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            {certs.map((cert) => (
+            {certs ? certs.map((cert) => {
+              const logoUrl = cert.logo ? urlFor(cert.logo).height(32).url() : null;
+              return (
+                <div
+                  key={cert._id}
+                  className="bg-white border border-gray-200 rounded-full px-5 py-2 text-gray-700 text-sm font-medium flex items-center gap-2 shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-200"
+                >
+                  {logoUrl ? (
+                    <img src={logoUrl} alt={cert.name} className="h-5 w-auto" />
+                  ) : (
+                    <CheckIcon className="w-4 h-4 text-blue-800 flex-shrink-0" />
+                  )}
+                  {cert.name}
+                </div>
+              );
+            }) : FALLBACK_CERTS.map((cert) => (
               <div
                 key={cert}
                 className="bg-white border border-gray-200 rounded-full px-5 py-2 text-gray-700 text-sm font-medium flex items-center gap-2 shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-200"

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getChatSettings } from "@/sanity/queries";
 
-const SYSTEM_PROMPT = `Du er en hjelpsom assistent for Elektro Sør AS, en lokal elektroentreprenør i Lindesnesregionen (Mandal/Spangereid).
+const DEFAULT_SYSTEM_PROMPT = `Du er en hjelpsom assistent for Elektro Sør AS, en lokal elektroentreprenør i Lindesnesregionen (Mandal/Spangereid).
 
 Svar alltid på norsk. Vær kortfattet, vennlig og profesjonell.
 
@@ -34,6 +35,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Load system prompt from Sanity (falls back to default if not set)
+    const chatSettings = await getChatSettings().catch(() => null);
+    const systemPrompt = chatSettings?.systemPrompt || DEFAULT_SYSTEM_PROMPT;
+
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -43,7 +48,7 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         model: "gpt-4o-mini",
         messages: [
-          { role: "system", content: SYSTEM_PROMPT },
+          { role: "system", content: systemPrompt },
           ...messages.slice(-10), // max 10 meldinger i kontekst
         ],
         max_tokens: 400,

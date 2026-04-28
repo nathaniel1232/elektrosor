@@ -52,6 +52,19 @@ export default defineConfig({
             S.documentTypeListItem("jobPosting")
               .title("💼 Stillingsannonser")
               .icon(() => "💼"),
+            S.divider(),
+            S.documentTypeListItem("sertifisering")
+              .title("✅ Sertifiseringer")
+              .icon(() => "✅"),
+            S.listItem()
+              .title("🤖 AI-chatbot innstillinger")
+              .id("chatSettings")
+              .child(
+                S.document()
+                  .schemaType("chatSettings")
+                  .documentId("chatSettings")
+                  .title("AI-chatbot innstillinger")
+              ),
           ]),
     }),
     visionTool({ defaultApiVersion: apiVersion }),

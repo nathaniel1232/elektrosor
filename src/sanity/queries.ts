@@ -80,3 +80,48 @@ export async function getTestimonials() {
     { next: { tags: ["testimonial"] } }
   );
 }
+
+// Sertifiseringer
+export async function getSertifiseringer() {
+  if (!client) return null;
+  return client.fetch(
+    `*[_type == "sertifisering"] | order(order asc) {
+      _id,
+      name,
+      logo,
+      order
+    }`,
+    {},
+    { next: { tags: ["sertifisering"] } }
+  );
+}
+
+// Chat settings (system prompt for AI)
+export async function getChatSettings() {
+  if (!client) return null;
+  return client.fetch(
+    `*[_type == "chatSettings"][0]{
+      systemPrompt,
+      welcomeMessage
+    }`,
+    {},
+    { next: { tags: ["chatSettings"], revalidate: 300 } }
+  );
+}
+
+// Featured referanser for homepage (max 3)
+export async function getFeaturedReferanser() {
+  if (!client) return null;
+  return client.fetch(
+    `*[_type == "referanse" && featured == true] | order(order asc)[0...3] {
+      _id,
+      title,
+      category,
+      location,
+      description,
+      image
+    }`,
+    {},
+    { next: { tags: ["referanse"] } }
+  );
+}

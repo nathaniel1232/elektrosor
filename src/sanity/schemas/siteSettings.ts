@@ -25,9 +25,16 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: "heroImage",
-      title: "Forsiden – Bakgrunnsbilde",
+      title: "Forsiden – Bilde (høyre side)",
       type: "image",
       description: "Bildet som vises på høyre side av forsiden (ca. 600×600px). Kan være foto av team, kontor eller arbeid i gang.",
+      options: { hotspot: true },
+    }),
+    defineField({
+      name: "aboutImage",
+      title: "Om oss – bilde",
+      type: "image",
+      description: "Bildet som vises i 'Om oss'-seksjonen midt på forsiden. Kan være foto av teamet, verkstedet eller en pågående jobb.",
       options: { hotspot: true },
     }),
     defineField({
