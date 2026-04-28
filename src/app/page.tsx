@@ -21,19 +21,8 @@ export const metadata: Metadata = {
 
 function ImagePlaceholder({ label = "Legg til bilde", className = "" }: { label?: string; className?: string }) {
   return (
-    <div
-      className={`relative overflow-hidden flex items-center justify-center ${className}`}
-      style={{ background: "linear-gradient(135deg, #1e3a5f 0%, #1e40af 60%, #1d4ed8 100%)" }}
-    >
-      <div className="absolute -top-10 -right-10 w-48 h-48 bg-blue-500 rounded-full opacity-20" />
-      <div className="absolute -bottom-10 -left-10 w-56 h-56 bg-red-600 rounded-full opacity-10" />
-      <div className="relative z-10 text-center select-none">
-        <svg className="w-10 h-10 mx-auto mb-2 text-blue-400 opacity-60" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
-        </svg>
-        <p className="text-xs text-blue-300 opacity-70">{label}</p>
-      </div>
+    <div className={`flex items-center justify-center bg-gray-100 text-gray-400 ${className}`}>
+      <p className="text-sm select-none">{label}</p>
     </div>
   );
 }
@@ -193,17 +182,17 @@ export default async function Home() {
 
       {/* ── STATS ── */}
       <section className="border-b border-gray-100 bg-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-gray-100">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 text-center">
             {[
               { value: "25+", label: "År i bransjen" },
               { value: "500+", label: "Gjennomførte oppdrag" },
               { value: "4.9★", label: "Snittkarakter" },
               { value: "24/7", label: "Vakttelefon" },
             ].map((s) => (
-              <div key={s.label} className="px-4 first:pl-0 last:pr-0">
-                <p className="text-3xl font-bold text-blue-900">{s.value}</p>
-                <p className="text-sm text-gray-500 mt-1">{s.label}</p>
+              <div key={s.label}>
+                <p className="text-2xl sm:text-3xl font-bold text-blue-900">{s.value}</p>
+                <p className="text-xs sm:text-sm text-gray-500 mt-2">{s.label}</p>
               </div>
             ))}
           </div>
@@ -227,19 +216,16 @@ export default async function Home() {
                 <Link
                   key={s.title}
                   href={s.href}
-                  className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-blue-200 card-hover"
+                  className="group bg-white rounded-lg overflow-hidden border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all"
                 >
-                  <div className={`h-36 bg-gradient-to-br ${s.bg} flex items-center justify-center relative overflow-hidden`}>
-                    <div className="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <Icon className="w-7 h-7 text-blue-800" />
-                    </div>
-                    <div className="absolute top-2 right-2 text-[10px] text-gray-300 bg-white/80 rounded px-1.5 py-0.5 font-medium">Bilde</div>
+                  <div className="h-32 bg-gray-100 flex items-center justify-center">
+                    <Icon className="w-10 h-10 text-blue-800 opacity-70" />
                   </div>
                   <div className="p-5">
-                    <h3 className="font-bold text-gray-900 mb-2 group-hover:text-blue-800 transition-colors">{s.title}</h3>
-                    <p className="text-gray-500 text-sm leading-relaxed">{s.desc}</p>
-                    <div className="mt-4 flex items-center gap-1 text-blue-700 text-sm font-medium">
-                      Les mer <ArrowRightIcon className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                    <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-blue-800 transition-colors">{s.title}</h3>
+                    <p className="text-gray-600 text-sm leading-relaxed mb-4">{s.desc}</p>
+                    <div className="flex items-center gap-1 text-blue-700 text-sm font-medium group-hover:gap-2 transition-all">
+                      Les mer <ArrowRightIcon className="w-4 h-4" />
                     </div>
                   </div>
                 </Link>
