@@ -361,21 +361,20 @@ export default async function Home() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="bg-blue-900 py-16 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(239,68,68,0.15),_transparent_60%)]" />
-        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">Trenger du elektriker?</h2>
-          <p className="text-blue-200 mb-8 text-lg">Kontakt oss på 38 27 13 90 eller send en bestilling – vi svarer raskt.</p>
+      <section className="bg-blue-900 py-14 sm:py-16">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">Trenger du elektriker?</h2>
+          <p className="text-blue-200 mb-7 sm:mb-8 text-base sm:text-lg">Kontakt oss på 38 27 13 90 eller send en bestilling – vi svarer raskt.</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/bestilling"
-              className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold px-8 py-3.5 rounded-full transition-all duration-200 hover:shadow-lg hover:shadow-red-900/40"
+              className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold px-8 py-3 sm:py-3.5 rounded-full transition-colors text-sm sm:text-base"
             >
               Send bestilling <ArrowRightIcon className="w-4 h-4" />
             </Link>
             <a
               href="tel:+4738271390"
-              className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold px-8 py-3.5 rounded-full transition-all duration-200"
+              className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold px-8 py-3 sm:py-3.5 rounded-full transition-colors text-sm sm:text-base"
             >
               <PhoneIcon className="w-4 h-4" />
               38 27 13 90
