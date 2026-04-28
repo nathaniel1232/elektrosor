@@ -14,7 +14,7 @@ export async function getSiteSettings() {
       openingHours
     }`,
     {},
-    { next: { tags: ["siteSettings"] } }
+    { next: { tags: ["siteSettings"], revalidate: 60 } }
   );
 }
 
@@ -37,7 +37,7 @@ export async function getJobPostings() {
       offers
     }`,
     {},
-    { next: { tags: ["jobPosting"] } }
+    { next: { tags: ["jobPosting"], revalidate: 60 } }
   );
 }
 
@@ -58,7 +58,7 @@ export async function getReferanser(featuredOnly = false) {
       featured
     }`,
     {},
-    { next: { tags: ["referanse"] } }
+    { next: { tags: ["referanse"], revalidate: 60 } }
   );
 }
 
@@ -77,7 +77,7 @@ export async function getTestimonials() {
       order
     }`,
     {},
-    { next: { tags: ["testimonial"] } }
+    { next: { tags: ["testimonial"], revalidate: 60 } }
   );
 }
 
@@ -92,7 +92,7 @@ export async function getSertifiseringer() {
       order
     }`,
     {},
-    { next: { tags: ["sertifisering"] } }
+    { next: { tags: ["sertifisering"], revalidate: 60 } }
   );
 }
 
@@ -105,7 +105,7 @@ export async function getChatSettings() {
       welcomeMessage
     }`,
     {},
-    { next: { tags: ["chatSettings"], revalidate: 300 } }
+    { next: { tags: ["chatSettings"], revalidate: 60 } }
   );
 }
 
@@ -122,6 +122,6 @@ export async function getFeaturedReferanser() {
       image
     }`,
     {},
-    { next: { tags: ["referanse"] } }
+    { next: { tags: ["referanse"], revalidate: 60 } }
   );
 }

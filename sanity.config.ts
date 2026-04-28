@@ -3,6 +3,7 @@ import { structureTool } from "sanity/structure";
 import { visionTool } from "@sanity/vision";
 import { apiVersion, dataset, projectId } from "@/sanity/env";
 import { schemaTypes } from "@/sanity/schemas";
+import { HelpView } from "@/sanity/components/HelpView";
 
 export default defineConfig({
   basePath: "/studio",
@@ -23,10 +24,8 @@ export default defineConfig({
               .title("📖 Hvordan bruke dette?")
               .id("help")
               .child(
-                S.document()
-                  .schemaType("guide")
-                  .documentId("guide")
-                  .title("Bruksguide")
+                S.component(HelpView)
+                  .title("📖 Bruksguide")
               ),
             S.divider(),
             
