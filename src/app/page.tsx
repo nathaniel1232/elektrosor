@@ -1,15 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-  HomeIcon,
-  BuildingOfficeIcon,
-  WrenchScrewdriverIcon,
-  MagnifyingGlassIcon,
   PhoneIcon,
   CheckIcon,
   StarIcon,
   ArrowRightIcon,
-  BoltIcon,
 } from "@/components/Icons";
 import { getTestimonials } from "@/sanity/queries";
 
@@ -21,51 +16,32 @@ export const metadata: Metadata = {
 
 function ImagePlaceholder({ label = "Legg til bilde", className = "" }: { label?: string; className?: string }) {
   return (
-    <div
-      className={`relative overflow-hidden flex items-center justify-center ${className}`}
-      style={{ background: "linear-gradient(135deg, #1e3a5f 0%, #1e40af 60%, #1d4ed8 100%)" }}
-    >
-      <div className="absolute -top-10 -right-10 w-48 h-48 bg-blue-500 rounded-full opacity-20" />
-      <div className="absolute -bottom-10 -left-10 w-56 h-56 bg-red-600 rounded-full opacity-10" />
-      <div className="relative z-10 text-center select-none">
-        <svg className="w-10 h-10 mx-auto mb-2 text-blue-400 opacity-60" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
-        </svg>
-        <p className="text-xs text-blue-300 opacity-70">{label}</p>
-      </div>
+    <div className={`bg-gray-100 flex items-center justify-center ${className}`}>
+      <p className="text-xs text-gray-400 select-none">{label}</p>
     </div>
   );
 }
 
 const services = [
   {
-    icon: HomeIcon,
     title: "Privatmarkedet",
-    desc: "Stikkontakter, sikringsskap, belysning, elbillader, gulvvarme – vi fikser alt det elektriske i hjemmet ditt.",
+    desc: "Stikkontakter, sikringsskap, belysning, elbillader og gulvvarme – alt det elektriske i hjemmet ditt.",
     href: "/tjenester/privat",
-    bg: "from-blue-50 to-blue-100",
   },
   {
-    icon: BuildingOfficeIcon,
     title: "Næringsliv",
     desc: "Elektriske installasjoner tilpasset butikker og virksomheter – fra enkle endringer til komplette anlegg.",
     href: "/tjenester/naring",
-    bg: "from-red-50 to-red-100",
   },
   {
-    icon: WrenchScrewdriverIcon,
     title: "Industri",
-    desc: "Vi løser store industrioppdrag. Vi har hatt ansvar for elektroanlegg hos GE Healthcare og Mandal Fengsel.",
+    desc: "Store industrioppdrag. Vi har hatt ansvar for elektroanlegg hos GE Healthcare og Mandal Fengsel.",
     href: "/tjenester/naring#industri",
-    bg: "from-slate-50 to-slate-100",
   },
   {
-    icon: MagnifyingGlassIcon,
     title: "Termografering",
-    desc: "Avdekk feil og svakheter i elektriske anlegg med termografering – før de blir et kostbart problem.",
+    desc: "Avdekk feil i elektriske anlegg med termografering – før de blir et kostbart problem.",
     href: "/tjenester/privat#termografi",
-    bg: "from-amber-50 to-amber-100",
   },
 ];
 
@@ -133,7 +109,252 @@ export default async function Home() {
   return (
     <>
       {/* ── HERO ── */}
-      <section className="bg-blue-900 text-white overflow-hidden">
+      <section className="bg-blue-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <div>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight mb-4">
+                Din lokale elektriker<br />
+                <span className="text-red-400">– rask og pålitelig</span>
+              </h1>
+              <p className="text-blue-200 text-base sm:text-lg leading-relaxed mb-7 max-w-lg">
+                Vi holder til i Mandal og utfører alt fra enkle hjemmeinstallasjoner til totale elektrotekniske prosjekter for industri og næringsliv.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 mb-7">
+                <Link
+                  href="/bestilling"
+                  className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold px-6 py-3 rounded-lg transition-colors w-full sm:w-auto"
+                >
+                  Bestill elektriker
+                  <ArrowRightIcon className="w-4 h-4" />
+                </Link>
+                <a
+                  href="tel:+4738271390"
+                  className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold px-6 py-3 rounded-lg transition-colors w-full sm:w-auto"
+                >
+                  <PhoneIcon className="w-4 h-4" />
+                  38 27 13 90
+                </a>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-5 text-sm text-blue-300">
+                <span className="flex items-center gap-2"><CheckIcon className="w-4 h-4 text-red-400 flex-shrink-0" />Sertifiserte fagarbeidere</span>
+                <span className="flex items-center gap-2"><CheckIcon className="w-4 h-4 text-red-400 flex-shrink-0" />Vakttelefon 24/7</span>
+                <span className="flex items-center gap-2"><CheckIcon className="w-4 h-4 text-red-400 flex-shrink-0" />Gratis befaring</span>
+              </div>
+            </div>
+            <div className="hidden lg:block">
+              <ImagePlaceholder
+                label="Legg til bilde"
+                className="rounded-xl h-80 w-full"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── STATS ── */}
+      <section className="bg-white border-b border-gray-100">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            {[
+              { value: "25+", label: "År i bransjen" },
+              { value: "500+", label: "Gjennomførte oppdrag" },
+              { value: "4.9★", label: "Snittkarakter" },
+              { value: "24/7", label: "Vakttelefon" },
+            ].map((s) => (
+              <div key={s.label}>
+                <p className="text-2xl sm:text-3xl font-bold text-blue-900">{s.value}</p>
+                <p className="text-sm text-gray-500 mt-1">{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── SERVICES ── */}
+      <section className="py-14 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Hva kan vi hjelpe deg med?</h2>
+            <p className="text-gray-500 mt-2 max-w-xl text-sm sm:text-base">
+              Vi har høy kompetanse på mange områder innen elektrofaget.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {services.map((s) => (
+              <Link
+                key={s.title}
+                href={s.href}
+                className="group bg-white rounded-xl p-5 border border-gray-100 hover:border-blue-200 hover:shadow-sm transition-all"
+              >
+                <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-blue-800 transition-colors">{s.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{s.desc}</p>
+                <div className="mt-4 flex items-center gap-1 text-blue-700 text-sm font-medium">
+                  Les mer <ArrowRightIcon className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── HOW IT WORKS ── */}
+      <section className="py-14 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8">Slik jobber vi</h2>
+          <div className="space-y-6">
+            {[
+              { num: "1", title: "Ta kontakt", desc: "Ring oss eller send en bestilling på nett. Vi svarer alltid innen én arbeidsdag." },
+              { num: "2", title: "Vi gir deg tilbud", desc: "Etter eventuell befaring får du et klart og uforpliktende tilbud uten skjulte kostnader." },
+              { num: "3", title: "Jobben utføres", desc: "Sertifiserte fagarbeidere utfører jobben ryddig og effektivt. Vi rydder opp etter oss." },
+            ].map((step) => (
+              <div key={step.num} className="flex gap-5 items-start">
+                <span className="text-3xl font-bold text-blue-100 w-8 flex-shrink-0 leading-none">{step.num}</span>
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-1">{step.title}</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed">{step.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-8">
+            <Link
+              href="/bestilling"
+              className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold px-6 py-3 rounded-lg transition-colors text-sm"
+            >
+              Send bestilling nå <ArrowRightIcon className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── ABOUT ── */}
+      <section className="py-14 bg-blue-900 text-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <ImagePlaceholder
+              label="Legg til bilde av team/kontor"
+              className="rounded-xl h-64 lg:h-80 w-full order-last lg:order-first"
+            />
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Lokal elektriker – siden starten</h2>
+              <p className="text-blue-200 leading-relaxed mb-3 text-sm sm:text-base">
+                Vi holder til i Mikkelsmyrveien 4B på Skinsnes i Mandal. Gjennom mange år har vi utført utallige oppdrag for folk og virksomheter i Mandalsregionen.
+              </p>
+              <p className="text-blue-200 leading-relaxed mb-6 text-sm sm:text-base">
+                Blant våre største prosjekter er utbyggingen ved <strong className="text-white">GE Healthcares fabrikker</strong> og arbeidet med <strong className="text-white">Mandal Fengsel</strong>.
+              </p>
+              <ul className="space-y-2 mb-6">
+                {["Konkurransedyktige priser", "Sertifiserte fagarbeidere og mestere", "Vakttelefon utenom åpningstid", "Godkjent lærebedrift"].map((p) => (
+                  <li key={p} className="flex items-center gap-2 text-sm text-blue-100">
+                    <CheckIcon className="w-4 h-4 text-red-400 flex-shrink-0" />
+                    {p}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/om-oss"
+                className="inline-flex items-center gap-2 bg-white text-blue-900 hover:bg-blue-50 font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm"
+              >
+                Les mer om oss <ArrowRightIcon className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── TESTIMONIALS + REFERENCES ── */}
+      <section className="py-14 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            {/* Testimonial */}
+            <div>
+              <h2 className="text-xl font-bold text-gray-900 mb-5">Hva kundene sier</h2>
+              <div className="bg-white rounded-xl p-6 border border-gray-100">
+                <div className="flex gap-0.5 mb-3">
+                  {[...Array(displayTestimonial.rating || 5)].map((_, i) => <StarIcon key={i} className="w-4 h-4 text-yellow-400" />)}
+                </div>
+                <p className="text-gray-700 leading-relaxed mb-4 text-sm sm:text-base">
+                  &ldquo;{displayTestimonial.text}&rdquo;
+                </p>
+                <div>
+                  <p className="font-semibold text-gray-900 text-sm">{displayTestimonial.name}</p>
+                  <p className="text-xs text-gray-400">{displayTestimonial.role}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* References */}
+            <div>
+              <h2 className="text-xl font-bold text-gray-900 mb-5">Noen prosjekter vi er stolte av</h2>
+              <div className="space-y-3">
+                {[
+                  { name: "GE Healthcare", desc: "Utbygging av elektrisk anlegg ved fabrikker i Ramslandsvågen", tag: "Industri" },
+                  { name: "Mandal Fengsel", desc: "Elektrotekniske installasjoner i forbindelse med bygging", tag: "Offentlig" },
+                  { name: "Mandal Golfklubb", desc: "Elektriske arbeider på klubbhus og anlegg", tag: "Næring" },
+                ].map((proj) => (
+                  <div key={proj.name} className="bg-white rounded-xl border border-gray-100 px-4 py-3">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <p className="font-semibold text-gray-900 text-sm">{proj.name}</p>
+                      <span className="text-[10px] font-medium bg-blue-50 text-blue-700 px-2 py-0.5 rounded">{proj.tag}</span>
+                    </div>
+                    <p className="text-gray-500 text-xs leading-snug">{proj.desc}</p>
+                  </div>
+                ))}
+                <Link href="/referanser" className="inline-flex items-center gap-1.5 text-blue-800 hover:text-red-600 text-sm font-medium mt-1 transition-colors">
+                  Se alle referanser <ArrowRightIcon className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <section className="bg-blue-900 py-14">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">Trenger du elektriker?</h2>
+          <p className="text-blue-200 mb-7 text-base">Kontakt oss på 38 27 13 90 eller send en bestilling – vi svarer raskt.</p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link
+              href="/bestilling"
+              className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold px-7 py-3 rounded-lg transition-colors"
+            >
+              Send bestilling <ArrowRightIcon className="w-4 h-4" />
+            </Link>
+            <a
+              href="tel:+4738271390"
+              className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold px-7 py-3 rounded-lg transition-colors"
+            >
+              <PhoneIcon className="w-4 h-4" />
+              38 27 13 90
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CERTIFICATIONS ── */}
+      <section className="py-10 bg-white border-t border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-center text-xs font-semibold uppercase tracking-wider text-gray-400 mb-5">
+            Sertifiseringer og godkjenninger
+          </p>
+          <div className="flex flex-wrap justify-center gap-2">
+            {certs.map((cert) => (
+              <div
+                key={cert}
+                className="bg-white border border-gray-200 rounded px-4 py-1.5 text-gray-600 text-sm font-medium flex items-center gap-2"
+              >
+                <CheckIcon className="w-3.5 h-3.5 text-blue-800 flex-shrink-0" />
+                {cert}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>

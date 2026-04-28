@@ -29,6 +29,7 @@ export default defineConfig({
             S.divider(),
             S.documentTypeListItem("jobPosting").title("Stillingsannonser"),
             S.documentTypeListItem("referanse").title("Referanseprosjekter"),
+            S.documentTypeListItem("testimonial").title("Anmeldelser"),
           ]),
     }),
     visionTool({ defaultApiVersion: apiVersion }),
