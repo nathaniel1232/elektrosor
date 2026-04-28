@@ -1,30 +1,20 @@
 import { defineType, defineField } from "sanity";
+import { HelpView } from "../components/HelpView";
 
 export const guide = defineType({
   name: "guide",
-  title: "Bruksguide",
+  title: "📖 Bruksguide",
   type: "document",
+  components: {
+    // Replace the entire document form with our custom help view
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    input: HelpView as any,
+  },
   fields: [
     defineField({
       name: "title",
       type: "string",
       hidden: true,
-    }),
-    defineField({
-      name: "content",
-      title: "Instruksjoner",
-      type: "array",
-      of: [
-        {
-          type: "block",
-          styles: [
-            { title: "Normal", value: "normal" },
-            { title: "Heading 2", value: "h2" },
-            { title: "Heading 3", value: "h3" },
-          ],
-          lists: [{ title: "Bullet", value: "bullet" }],
-        },
-      ],
     }),
   ],
   preview: {

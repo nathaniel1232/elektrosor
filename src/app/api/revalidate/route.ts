@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidateTag, revalidatePath } from "next/cache";
+import { revalidatePath } from "next/cache";
 
 export async function POST(req: NextRequest) {
   const secret = req.nextUrl.searchParams.get("secret");
@@ -9,20 +9,12 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    // Revalidate all Sanity content tags
-    await Promise.all([
-      revalidateTag("testimonial"),
-      revalidateTag("referanse"),
-      revalidateTag("siteSettings"),
-      revalidateTag("sertifisering"),
-      revalidateTag("jobPosting"),
-      revalidateTag("chatSettings"),
-    ]);
-
-    // Also revalidate main pages
+    // Revalidate all main pages that show Sanity content
     revalidatePath("/", "layout");
-    revalidatePath("/referanser");
-    revalidatePath("/karriere");
+    revalidatePath("/referanser", "page");
+    revalidatePath("/karriere", "page");
+    revalidatePath("/om-oss", "page");
+    revalidatePath("/tjenester", "page");
 
     return NextResponse.json({ revalidated: true, timestamp: Date.now() });
   } catch (err) {

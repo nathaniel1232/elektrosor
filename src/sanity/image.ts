@@ -6,6 +6,7 @@ const builder = client ? imageUrlBuilder(client as any) : null;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function urlFor(source: any) {
-  if (!builder) return { url: () => "" };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (!builder) return { url: () => "", width: () => ({ url: () => "", height: () => ({ url: () => "" }) }) } as any;
   return builder.image(source);
 }

@@ -73,7 +73,9 @@ const FALLBACK_CERTS = [
   "Godkjent for ansvarsrett",
 ];
 
-const FALLBACK_REFS = [
+type RefItem = { _id: string; title: string; description: string; category: string; location: string; image: unknown };
+
+const FALLBACK_REFS: RefItem[] = [
   { _id: "r1", title: "GE Healthcare", description: "Utbygging av elektrisk anlegg ved fabrikker i Ramslandsvågen", category: "industri", location: "Spangereid", image: null },
   { _id: "r2", title: "Mandal Fengsel", description: "Elektrotekniske installasjoner i forbindelse med bygging", category: "offentlig", location: "Mandal", image: null },
   { _id: "r3", title: "Mandal Golfklubb", description: "Elektriske arbeider på klubbhus og anlegg", category: "naring", location: "Mandal", image: null },
@@ -132,8 +134,9 @@ export default async function Home() {
 
   const allTestimonials = testimonials?.length ? testimonials : FALLBACK_TESTIMONIALS;
   const displayTestimonial = allTestimonials[0];
-  const certs = sertifiseringer?.length ? sertifiseringer : null;
-  const refs = featuredRefs?.length ? featuredRefs : FALLBACK_REFS;
+type CertItem = { _id: string; name: string; logo: unknown; order: number };
+  const certs: CertItem[] | null = sertifiseringer?.length ? (sertifiseringer as CertItem[]) : null;
+  const refs: RefItem[] = (featuredRefs?.length ? featuredRefs : FALLBACK_REFS) as RefItem[];
 
   const heroImageUrl = siteSettings?.heroImage ? urlFor(siteSettings.heroImage).width(600).height(600).url() : null;
   const aboutImageUrl = siteSettings?.aboutImage ? urlFor(siteSettings.aboutImage).width(700).height(500).url() : null;
