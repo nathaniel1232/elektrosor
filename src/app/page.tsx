@@ -130,23 +130,23 @@ export default async function Home() {
                 <BoltIcon className="w-3.5 h-3.5 text-red-400" />
                 Godkjent elektroentreprenør – Mandal
               </span>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-5">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 sm:mb-5">
                 Din lokale <span className="text-red-400">elektriker</span> – rask og pålitelig
               </h1>
-              <p className="text-blue-200 text-lg leading-relaxed mb-8 max-w-lg">
+              <p className="text-blue-200 text-base sm:text-lg leading-relaxed mb-6 sm:mb-8 max-w-lg">
                 Vi holder til i Mandal og utfører alt fra enkle hjemmeinstallasjoner til totale elektrotekniske prosjekter for industri og næringsliv.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 mb-8">
+              <div className="flex flex-col sm:flex-row gap-3 mb-6 sm:mb-8">
                 <Link
                   href="/bestilling"
-                  className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold px-7 py-3.5 rounded-full transition-all duration-200 hover:shadow-lg hover:shadow-red-900/30"
+                  className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold px-6 sm:px-7 py-3.5 sm:py-4 rounded-full transition-all duration-200 hover:shadow-lg hover:shadow-red-900/30 text-sm sm:text-base"
                 >
                   Bestill elektriker
                   <ArrowRightIcon className="w-4 h-4" />
                 </Link>
                 <a
                   href="tel:+4738271390"
-                  className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold px-7 py-3.5 rounded-full transition-all duration-200"
+                  className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold px-6 sm:px-7 py-3.5 sm:py-4 rounded-full transition-all duration-200 text-sm sm:text-base"
                 >
                   <PhoneIcon className="w-4 h-4" />
                   38 27 13 90
@@ -200,30 +200,30 @@ export default async function Home() {
       </section>
 
       {/* ── SERVICES ── */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-12 sm:py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-10">
+          <div className="mb-8 sm:mb-10">
             <span className="text-xs font-bold uppercase tracking-widest text-red-500">Tjenester</span>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mt-1">Hva kan vi hjelpe deg med?</h2>
-            <p className="text-gray-500 mt-2 max-w-xl">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mt-1.5">Hva kan vi hjelpe deg med?</h2>
+            <p className="text-gray-500 text-sm sm:text-base mt-2 max-w-xl leading-relaxed">
               Vi har høy kompetanse på mange områder innen elektrofaget og utfører alle oppdrag med faglig stolthet.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
             {services.map((s) => {
               const Icon = s.icon;
               return (
                 <Link
                   key={s.title}
                   href={s.href}
-                  className="group bg-white rounded-lg overflow-hidden border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all"
+                  className="group bg-white rounded-lg overflow-hidden border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all active:shadow-md sm:active:shadow-md"
                 >
                   <div className="h-32 bg-gray-100 flex items-center justify-center">
                     <Icon className="w-10 h-10 text-blue-800 opacity-70" />
                   </div>
-                  <div className="p-5">
-                    <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-blue-800 transition-colors">{s.title}</h3>
-                    <p className="text-gray-600 text-sm leading-relaxed mb-4">{s.desc}</p>
+                  <div className="p-4 sm:p-5">
+                    <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-blue-800 transition-colors text-sm sm:text-base">{s.title}</h3>
+                    <p className="text-gray-600 text-sm leading-relaxed mb-3 sm:mb-4">{s.desc}</p>
                     <div className="flex items-center gap-1 text-blue-700 text-sm font-medium group-hover:gap-2 transition-all">
                       Les mer <ArrowRightIcon className="w-4 h-4" />
                     </div>

@@ -110,16 +110,16 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-gray-100 px-4 py-4 space-y-1 shadow-lg">
-          <Link href="/tjenester/privat" className="block px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-800 rounded" onClick={() => setMobileOpen(false)}>Privatmarkedet</Link>
-          <Link href="/tjenester/naring" className="block px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-800 rounded" onClick={() => setMobileOpen(false)}>Butikk / næring / industri</Link>
-          <Link href="/referanser" className="block px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-800 rounded" onClick={() => setMobileOpen(false)}>Referanser</Link>
-          <Link href="/om-oss" className="block px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-800 rounded" onClick={() => setMobileOpen(false)}>Om oss</Link>
-          <Link href="/karriere" className="block px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-800 rounded" onClick={() => setMobileOpen(false)}>Ledig stilling</Link>
-          <Link href="/kontakt" className="block px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-800 rounded" onClick={() => setMobileOpen(false)}>Kontakt oss</Link>
+        <div className="md:hidden bg-white border-t border-gray-100 px-4 py-3 space-y-1 shadow-lg">
+          <Link href="/tjenester/privat" className="block px-3 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-800 rounded" onClick={() => setMobileOpen(false)}>Privatmarkedet</Link>
+          <Link href="/tjenester/naring" className="block px-3 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-800 rounded" onClick={() => setMobileOpen(false)}>Butikk / næring / industri</Link>
+          <Link href="/referanser" className="block px-3 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-800 rounded" onClick={() => setMobileOpen(false)}>Referanser</Link>
+          <Link href="/om-oss" className="block px-3 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-800 rounded" onClick={() => setMobileOpen(false)}>Om oss</Link>
+          <Link href="/karriere" className="block px-3 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-800 rounded" onClick={() => setMobileOpen(false)}>Ledig stilling</Link>
+          <Link href="/kontakt" className="block px-3 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-800 rounded" onClick={() => setMobileOpen(false)}>Kontakt oss</Link>
           <Link
             href="/bestilling"
-            className="block mt-3 bg-red-600 text-white font-semibold px-4 py-2.5 rounded text-center"
+            className="block mt-3 bg-red-600 text-white font-semibold px-4 py-3 rounded text-center"
             onClick={() => setMobileOpen(false)}
           >
             Bestill elektriker
