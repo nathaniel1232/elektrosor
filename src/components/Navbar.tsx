@@ -46,7 +46,7 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center">
-              <img src="/images/logo.svg" alt="Elektro Sør" className="h-12 w-auto" />
+              <img src="/images/elektro_sor_logo.png" alt="Elektro Sør" className="h-12 w-auto" />
             </Link>
 
             {/* Desktop nav */}
