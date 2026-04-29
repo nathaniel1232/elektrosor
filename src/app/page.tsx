@@ -73,6 +73,7 @@ const FALLBACK_CERTS = [
   "Godkjent for ansvarsrett",
 ];
 
+type CertItem = { _id: string; name: string; logo: unknown; order: number };
 type RefItem = { _id: string; title: string; description: string; category: string; location: string; image: unknown };
 
 const FALLBACK_REFS: RefItem[] = [
@@ -134,7 +135,6 @@ export default async function Home() {
 
   const allTestimonials = testimonials?.length ? testimonials : FALLBACK_TESTIMONIALS;
   const displayTestimonial = allTestimonials[0];
-type CertItem = { _id: string; name: string; logo: unknown; order: number };
   const certs: CertItem[] | null = sertifiseringer?.length ? (sertifiseringer as CertItem[]) : null;
   const refs: RefItem[] = (featuredRefs?.length ? featuredRefs : FALLBACK_REFS) as RefItem[];
 
