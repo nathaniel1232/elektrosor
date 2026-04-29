@@ -1,3 +1,4 @@
+/** @react-compiler-skip */
 "use client";
 
 import { NextStudio } from "next-sanity/studio";
