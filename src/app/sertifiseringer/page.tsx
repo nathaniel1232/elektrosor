@@ -3,86 +3,80 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Sertifiseringer og godkjenninger",
   description:
-    "Elektro Sør AS er sertifisert og godkjent av relevante myndigheter og bransjeorganisasjoner. Se alle våre godkjenninger.",
+    "Elektro Sør AS er registrert hos DSB, godkjent lærebedrift, EKOM-installatør og sertifisert KNX-partner.",
 };
 
-const certs = [
+type Cert = {
+  name: string;
+  icon: string; // relative to /public
+  body: string;
+};
+
+const certs: Cert[] = [
   {
-    name: "NELFO",
-    full: "Nelfo – El og It Bedriftene",
-    desc: "Elektro Sør er medlem av NELFO, bransjeforeningen for elektrofag i Norge. Medlemskapet sikrer at vi følger bransjens kvalitets- og HMS-standarder.",
-    category: "Bransje",
+    name: "Registrert El-installatør",
+    icon: "/images/certs/registrert-el-installator.png",
+    body:
+      "Vi er registrert som elvirksomhet hos Direktoratet for samfunnssikkerhet og beredskap (DSB) og kan utføre elektriske installasjoner i tråd med norsk regelverk.",
   },
   {
-    name: "DSB",
-    full: "Direktoratet for samfunnssikkerhet og beredskap",
-    desc: "Vi er registrert hos DSB og har godkjenning til å utføre elektriske installasjoner i henhold til norsk lov.",
-    category: "Myndighet",
+    name: "Godkjent lærebedrift",
+    icon: "/images/certs/godkjent-laerebedrift.png",
+    body:
+      "Godkjent for å ta inn elektrikerlærlinger. Vi har flere lærlinger til enhver tid.",
   },
   {
-    name: "ISO 9001",
-    full: "ISO 9001:2015 – Kvalitetsstyring",
-    desc: "Sertifisert etter ISO 9001 for systematisk kvalitetsstyring i alle ledd av virksomheten.",
-    category: "Kvalitet",
+    name: "Registrert EKOM-installatør",
+    icon: "/images/certs/registrert-ekom-installator.png",
+    body:
+      "Godkjenning for å gjøre arbeider på elektroniske kommunikasjonsanlegg.",
   },
   {
-    name: "Mesterbrev",
-    full: "Mesterbrev i elektrofaget",
-    desc: "Vår faglige leder er godkjent mester i elektrofaget – den høyeste faglige sertifiseringen i bransjen.",
-    category: "Fag",
+    name: "Sertifisert KNX Partner",
+    icon: "/images/certs/sertifisert-knx-partner.png",
+    body:
+      "Sertifisert for planlegging og installasjon av KNX-baserte styringssystemer for smarthus og næringsbygg.",
   },
   {
-    name: "Stifinner",
-    full: "Seriøsitetserklæring",
-    desc: "Vi er registrert som seriøs aktør og oppfyller kravene til lønns- og arbeidsvilkår, skatt og HMS.",
-    category: "Seriøsitet",
+    name: "Godkjent for ansvarsrett",
+    icon: "/images/certs/godkjent-for-ansvarsrett.png",
+    body:
+      "Sentralt godkjent for ansvarsrett etter plan- og bygningsloven.",
   },
 ];
-
-const categoryColors: Record<string, string> = {
-  Bransje: "bg-blue-50 text-blue-600",
-  Myndighet: "bg-red-50 text-red-600",
-  Kvalitet: "bg-green-50 text-green-600",
-  Fag: "bg-yellow-50 text-yellow-600",
-  Seriøsitet: "bg-purple-50 text-purple-600",
-};
 
 export default function Sertifiseringer() {
   return (
     <>
-      <section className="bg-blue-900 text-white py-14 sm:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <span className="inline-block bg-red-600 text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4">
-            Tillit
-          </span>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4">Sertifiseringer</h1>
-          <p className="text-blue-200 text-lg max-w-xl leading-relaxed">
-            Dokumentert kvalitet og godkjenninger som gir deg trygghet som kunde.
-          </p>
+      <section className="bg-blue-900 text-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+          <h1 className="text-3xl sm:text-4xl font-bold">Sertifiseringer</h1>
         </div>
       </section>
 
-      <section className="py-14 sm:py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="space-y-4">
-            {certs.map((c) => (
-              <div key={c.name} className="bg-white border border-gray-100 rounded-2xl p-5 sm:p-6 flex gap-4 shadow-sm transition-all duration-200 hover:shadow-md">
-                <div className="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 bg-blue-900 rounded-xl flex items-center justify-center text-red-400 font-extrabold text-xs sm:text-sm text-center leading-tight p-2">
-                  {c.name}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex flex-wrap items-center gap-2 mb-1">
-                    <h2 className="font-bold text-gray-900 text-sm sm:text-base">{c.full}</h2>
-                    <span className={`text-xs font-bold uppercase tracking-wide px-2 py-0.5 rounded-full ${categoryColors[c.category] ?? ""}`}>
-                      {c.category}
-                    </span>
-                  </div>
-                  <p className="text-gray-500 text-sm leading-relaxed">{c.desc}</p>
-                </div>
-              </div>
-            ))}
+      <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-6">
+        {certs.map((c) => (
+          <div
+            key={c.name}
+            className="flex gap-5 border-t border-gray-200 pt-5 items-start"
+          >
+            <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 rounded-full border border-gray-200 bg-white flex items-center justify-center overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={c.icon}
+                alt={c.name}
+                className="w-full h-full object-contain p-2"
+              />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="font-semibold text-gray-900 mb-1">{c.name}</h2>
+              <p className="text-gray-700 leading-relaxed text-sm">{c.body}</p>
+            </div>
           </div>
-        </div>
+        ))}
+        <p className="text-xs text-gray-500 pt-4">
+          Dokumentasjon på sertifiseringer kan oversendes på forespørsel.
+        </p>
       </section>
     </>
   );

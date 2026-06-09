@@ -34,3 +34,10 @@ yarn-error.log*
 .env
 .env.local
 !.env.example
+
+# raw source images (only ship resized/web-ready files in public/)
+/bilder/
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts.bak

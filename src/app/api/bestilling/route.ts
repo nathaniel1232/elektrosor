@@ -1,78 +1,107 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getSupabase } from "@/lib/supabase";
+import { LIMITS, email as parseEmail, isHoneypotTriggered, optStr, str } from "@/lib/validation";
+import { rateLimit } from "@/lib/ratelimit";
+import { createInstallerOrder } from "@/lib/installer";
 
 export async function POST(req: NextRequest) {
-  try {
-    const body = await req.json();
+  const rl = rateLimit(req, { key: "bestilling", limit: 5, windowMs: 60_000 });
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: "For mange forespørsler. Prøv igjen om litt." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSec) } }
+    );
+  }
 
-    const {
+  let body: Record<string, unknown>;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Ugyldig forespørsel." }, { status: 400 });
+  }
+
+  // Silently accept honeypot-triggered submissions to avoid telling bots they're caught.
+  if (isHoneypotTriggered(body)) {
+    return NextResponse.json({ ok: true }, { status: 201 });
+  }
+
+  const name = str(body.name, LIMITS.name);
+  const emailValue = parseEmail(body.email);
+  const phoneNumber = str(body.phoneNumber, LIMITS.phone);
+  const description = str(body.description, LIMITS.description);
+  // Installer krever full adresse, så disse er nå påkrevd (også server-side, ikke
+  // bare via `required` i skjemaet — klient-validering kan omgås).
+  const address = str(body.address, LIMITS.address);
+  const city = str(body.city, LIMITS.city);
+  const postalCode = str(body.postalCode, LIMITS.postalCode);
+
+  if (!name || !emailValue || !phoneNumber || !description || !address || !city || !postalCode) {
+    return NextResponse.json({ error: "Mangler eller ugyldige felt." }, { status: 400 });
+  }
+
+  const supabase = getSupabase();
+  if (!supabase) {
+    return NextResponse.json(
+      { error: "Bestillingen kunne ikke lagres. Ring oss på 38 27 13 90." },
+      { status: 503 }
+    );
+  }
+
+  const serviceType = optStr(body.serviceType, LIMITS.serviceType);
+
+  const { data, error } = await supabase
+    .from("bestilling")
+    .insert({
       name,
-      email,
-      phoneNumber,
+      email: emailValue,
+      phone_number: phoneNumber,
       address,
       city,
-      postalCode,
+      postal_code: postalCode,
+      service_type: serviceType,
       description,
-      serviceType,
-    } = body;
+    })
+    .select("id")
+    .single();
 
-    // Validate required fields
-    if (!name || !email || !phoneNumber || !description) {
-      return NextResponse.json(
-        { error: "Mangler påkrevde felt" },
-        { status: 400 }
-      );
-    }
-
-    const apiKey = process.env.INSTALLER_API_KEY;
-    if (!apiKey) {
-      console.error("INSTALLER_API_KEY is not set");
-      return NextResponse.json(
-        { error: "Serverkonfigurasjonsfeil" },
-        { status: 500 }
-      );
-    }
-
-    const orderData = {
-      name: `Bestilling fra ${name} – ${serviceType ?? "Elektroarbeid"}`,
-      description: description,
-      address: address ?? "",
-      city: city ?? "",
-      postalCode: postalCode ?? "",
-      countryCode: "NO",
-      email: email,
-      phoneNumber: phoneNumber,
-      contactPersonName: name,
-      metadata: {
-        serviceType: serviceType ?? "Ikke spesifisert",
-        source: "elektrosor.no",
-      },
-    };
-
-    const response = await fetch("https://api.installer.com/api/v1/order", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(orderData),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Installer API error:", response.status, errorText);
-      return NextResponse.json(
-        { error: "Kunne ikke opprette bestilling. Prøv igjen eller ring oss direkte." },
-        { status: 502 }
-      );
-    }
-
-    const result = await response.json();
-    return NextResponse.json({ success: true, orderId: result.id }, { status: 201 });
-  } catch (err) {
-    console.error("Bestilling error:", err);
+  if (error) {
+    console.error("Bestilling insert failed:", error.message);
     return NextResponse.json(
-      { error: "En uventet feil oppstod. Prøv igjen." },
+      { error: "Kunne ikke lagre bestillingen. Prøv igjen eller ring 38 27 13 90." },
       { status: 500 }
     );
   }
+
+  // Send videre til Installer. Vi feiler IKKE bestillingen om dette feiler — den
+  // er allerede lagret i Supabase, så pappa kan ringe kunden manuelt. Feilen
+  // logges i serverloggen så vi kan rydde opp etterpå.
+  const installer = await createInstallerOrder({
+    name,
+    email: emailValue,
+    phoneNumber,
+    address,
+    city,
+    postalCode,
+    serviceType,
+    description,
+    orderRef: data.id,
+  });
+
+  if ("ok" in installer && installer.ok) {
+    await supabase
+      .from("bestilling")
+      .update({ installer_order_id: installer.orderId })
+      .eq("id", data.id);
+    console.log(
+      "Installer-ordre opprettet:",
+      installer.displayId ?? installer.orderId,
+      installer.clientUrl ?? ""
+    );
+  } else if ("ok" in installer && !installer.ok) {
+    console.error("Installer-ordre feilet:", installer.error, "bestilling id:", data.id);
+  } else if ("skipped" in installer) {
+    console.info("Installer-videresending hoppet over:", installer.reason, "bestilling id:", data.id);
+  }
+
+  return NextResponse.json({ ok: true, id: data.id }, { status: 201 });
 }

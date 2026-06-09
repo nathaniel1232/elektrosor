@@ -1,182 +1,117 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
+  PhoneIcon,
+  ArrowRightIcon,
+  CheckIcon,
+  StarIcon,
+  BoltIcon,
   HomeIcon,
   BuildingOfficeIcon,
   WrenchScrewdriverIcon,
   MagnifyingGlassIcon,
-  PhoneIcon,
-  CheckIcon,
-  StarIcon,
-  ArrowRightIcon,
-  BoltIcon,
 } from "@/components/Icons";
-import { getTestimonials, getSertifiseringer, getFeaturedReferanser, getSiteSettings } from "@/sanity/queries";
-import { urlFor } from "@/sanity/image";
+import HeroImage from "@/components/HeroImage";
 
 export const metadata: Metadata = {
-  title: "Elektro Sør AS – Din lokale elektriker i Mandal",
+  title: "Elektro Sør AS – elektriker i Mandal",
   description:
-    "Elektro Sør AS er din lokale elektriker i Mandalsregionen. Vi utfører alt fra enkle installasjoner til store industriprosjekter. Ring 38 27 13 90.",
+    "Elektro Sør AS er en lokal elektroentreprenør i Mandal. Privat, næring og industri i Lindesnesregionen. Ring 38 27 13 90.",
 };
 
-function ImagePlaceholder({ label = "Legg til bilde", className = "" }: { label?: string; className?: string }) {
-  return (
-    <div className={`flex items-center justify-center bg-gray-100 text-gray-400 ${className}`}>
-      <p className="text-sm select-none">{label}</p>
-    </div>
-  );
-}
-
-const services = [
+const SERVICES = [
   {
-    icon: HomeIcon,
+    Icon: HomeIcon,
     title: "Privatmarkedet",
-    desc: "Stikkontakter, sikringsskap, belysning, elbillader, gulvvarme – vi fikser alt det elektriske i hjemmet ditt.",
+    desc: "Stikkontakter, sikringsskap, belysning, elbillader, gulvvarme og smarthus.",
     href: "/tjenester/privat",
-    bg: "from-blue-50 to-blue-100",
   },
   {
-    icon: BuildingOfficeIcon,
+    Icon: BuildingOfficeIcon,
     title: "Næringsliv",
-    desc: "Elektriske installasjoner tilpasset butikker og virksomheter – fra enkle endringer til komplette anlegg.",
+    desc: "Installasjoner for butikker og virksomheter — fra enkle endringer til komplette anlegg.",
     href: "/tjenester/naring",
-    bg: "from-red-50 to-red-100",
   },
   {
-    icon: WrenchScrewdriverIcon,
+    Icon: WrenchScrewdriverIcon,
     title: "Industri",
-    desc: "Vi løser store industrioppdrag. Vi har hatt ansvar for elektroanlegg hos GE Healthcare og Mandal Fengsel.",
+    desc: "Større industrioppdrag. Vi har hatt ansvar for elektroanlegg hos GE Healthcare og Mandal Fengsel.",
     href: "/tjenester/naring#industri",
-    bg: "from-slate-50 to-slate-100",
   },
   {
-    icon: MagnifyingGlassIcon,
+    Icon: MagnifyingGlassIcon,
     title: "Termografering",
-    desc: "Avdekk feil og svakheter i elektriske anlegg med termografering – før de blir et kostbart problem.",
+    desc: "Avdekk feil og varmegang i elektriske anlegg før det blir et kostbart problem.",
     href: "/tjenester/privat#termografi",
-    bg: "from-amber-50 to-amber-100",
   },
 ];
 
-const steps = [
-  { num: "01", title: "Ta kontakt", desc: "Ring oss eller send en bestilling på nett. Vi svarer alltid innen én arbeidsdag." },
-  { num: "02", title: "Vi gir deg tilbud", desc: "Etter eventuell befaring får du et klart og uforpliktende tilbud uten skjulte kostnader." },
-  { num: "03", title: "Jobben utføres", desc: "Sertifiserte fagarbeidere utfører jobben ryddig og effektivt. Vi rydder opp etter oss." },
-];
-
-const FALLBACK_CERTS = [
-  "Registrert El-installatør",
-  "Godkjent lærebedrift",
-  "Registrert EKOM-installatør",
-  "Sertifisert KNX Partner",
-  "Godkjent for ansvarsrett",
-];
-
-type CertItem = { _id: string; name: string; logo: unknown; order: number };
-type RefItem = { _id: string; title: string; description: string; category: string; location: string; image: unknown };
-
-const FALLBACK_REFS: RefItem[] = [
-  { _id: "r1", title: "GE Healthcare", description: "Utbygging av elektrisk anlegg ved fabrikker i Ramslandsvågen", category: "industri", location: "Spangereid", image: null },
-  { _id: "r2", title: "Mandal Fengsel", description: "Elektrotekniske installasjoner i forbindelse med bygging", category: "offentlig", location: "Mandal", image: null },
-  { _id: "r3", title: "Mandal Golfklubb", description: "Elektriske arbeider på klubbhus og anlegg", category: "naring", location: "Mandal", image: null },
-];
-
-const FALLBACK_TESTIMONIALS = [
+const REFS = [
   {
-    _id: "1",
-    name: "Marius Romedal",
-    role: "Privatkunde",
-    initials: "MR",
-    rating: 5,
-    text: "Veldig god service og de holder det de lover. Kjempefornøyd med kvalitet på produktene og utført jobb.",
-    featured: true,
-    order: 0,
+    title: "GE Healthcare",
+    location: "Spangereid",
+    desc: "Utbygging av elektrisk anlegg ved fabrikkene i Ramslandsvågen.",
+    tag: "Industri",
   },
   {
-    _id: "2",
-    name: "Ingrid Hansen",
-    role: "Bedriftseier",
-    initials: "IH",
-    rating: 5,
-    text: "Profesjonell gjeng som vet hva de gjør. Anbefaler sterkt til alle som trenger elektriker.",
-    featured: true,
-    order: 1,
+    title: "Mandal Fengsel",
+    location: "Mandal",
+    desc: "Elektrotekniske installasjoner i forbindelse med oppføring av bygget.",
+    tag: "Offentlig",
   },
   {
-    _id: "3",
-    name: "Johan Eriksen",
-    role: "Næringsvirksomhet",
-    initials: "JE",
-    rating: 5,
-    text: "Løste komplisert elektroproblem på kort tid. Ung, dyktig og pålitelig. Takk!",
-    featured: true,
-    order: 2,
-  },
-  {
-    _id: "4",
-    name: "Maria Andersen",
-    role: "Privatkunde",
-    initials: "MA",
-    rating: 5,
-    text: "Ryddig, effektivt og gode priser. Vil absolutt bruke dem igjen.",
-    featured: true,
-    order: 3,
+    title: "Mandal Golfklubb",
+    location: "Mandal",
+    desc: "Elektriske arbeider på klubbhus og uteanlegg.",
+    tag: "Næring",
   },
 ];
 
-export default async function Home() {
-  const [testimonials, sertifiseringer, featuredRefs, siteSettings] = await Promise.all([
-    getTestimonials(),
-    getSertifiseringer(),
-    getFeaturedReferanser(),
-    getSiteSettings(),
-  ]);
-
-  const allTestimonials = testimonials?.length ? testimonials : FALLBACK_TESTIMONIALS;
-  const displayTestimonial = allTestimonials[0];
-  const certs: CertItem[] | null = sertifiseringer?.length ? (sertifiseringer as CertItem[]) : null;
-  const refs: RefItem[] = (featuredRefs?.length ? featuredRefs : FALLBACK_REFS) as RefItem[];
-
-  const heroImageUrl = siteSettings?.heroImage ? urlFor(siteSettings.heroImage).width(600).height(600).url() : null;
-  const aboutImageUrl = siteSettings?.aboutImage ? urlFor(siteSettings.aboutImage).width(700).height(500).url() : null;
-
+export default function Home() {
   return (
     <>
       {/* ── HERO ── */}
-      <section className="bg-blue-900 text-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <section className="bg-blue-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
             <div>
-              <span className="inline-flex items-center gap-2 bg-blue-800 text-blue-200 text-xs font-semibold uppercase tracking-widest px-3 py-1.5 rounded-full mb-6">
+              <span className="inline-flex items-center gap-2 bg-blue-800/70 text-blue-100 text-[11px] sm:text-xs font-semibold uppercase tracking-widest px-3 py-1.5 rounded-full mb-6">
                 <BoltIcon className="w-3.5 h-3.5 text-red-400" />
-                Godkjent elektroentreprenør – Mandal
+                Godkjent elektroentreprenør — Mandal
               </span>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 sm:mb-5">
-                Din lokale <span className="text-red-400">elektriker</span> – rask og pålitelig
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.05] mb-5">
+                Din lokale{" "}
+                <span className="text-red-400">elektriker</span>
+                <span className="block sm:inline">{" "}— rask og pålitelig</span>
               </h1>
-              <p className="text-blue-200 text-base sm:text-lg leading-relaxed mb-6 sm:mb-8 max-w-lg">
-                Vi holder til i Mandal og utfører alt fra enkle hjemmeinstallasjoner til totale elektrotekniske prosjekter for industri og næringsliv.
+              <p className="text-blue-100 text-base sm:text-lg leading-relaxed max-w-xl mb-7">
+                Vi holder til i Mandal og utfører alt fra enkle hjemmeinstallasjoner til totale
+                elektrotekniske prosjekter for industri og næringsliv.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 mb-6 sm:mb-8">
+
+              <div className="flex flex-col sm:flex-row gap-3 mb-7">
                 <Link
                   href="/bestilling"
-                  className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold px-6 sm:px-7 py-3.5 sm:py-4 rounded-full transition-all duration-200 hover:shadow-lg hover:shadow-red-900/30 text-sm sm:text-base"
+                  className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold px-7 py-3.5 rounded-full text-base transition-all hover:shadow-lg hover:shadow-red-900/30"
                 >
                   Bestill elektriker
                   <ArrowRightIcon className="w-4 h-4" />
                 </Link>
                 <a
                   href="tel:+4738271390"
-                  className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold px-6 sm:px-7 py-3.5 sm:py-4 rounded-full transition-all duration-200 text-sm sm:text-base"
+                  className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold px-7 py-3.5 rounded-full text-base"
                 >
                   <PhoneIcon className="w-4 h-4" />
                   38 27 13 90
                 </a>
               </div>
-              <div className="flex flex-wrap gap-3">
+
+              <div className="flex flex-wrap gap-2 sm:gap-3">
                 {["Sertifiserte fagarbeidere", "Vakttelefon 24/7", "Gratis befaring"].map((t) => (
-                  <span key={t} className="flex items-center gap-1.5 text-xs text-blue-300 bg-blue-800/60 px-3 py-1.5 rounded-full">
+                  <span
+                    key={t}
+                    className="inline-flex items-center gap-1.5 bg-blue-800/60 text-blue-100 text-xs sm:text-sm font-medium px-3 py-1.5 rounded-full"
+                  >
                     <CheckIcon className="w-3 h-3 text-red-400" />
                     {t}
                   </span>
@@ -184,80 +119,61 @@ export default async function Home() {
               </div>
             </div>
 
-            {/* Hero image */}
-            <div className="hidden lg:block relative">
-              {heroImageUrl ? (
-                <img
-                  src={heroImageUrl}
-                  alt="Elektro Sør – elektriker i arbeid"
-                  className="rounded-2xl h-96 w-full object-cover shadow-2xl shadow-blue-950/50"
-                />
-              ) : (
-                <ImagePlaceholder
-                  label="Last opp bilde i Redaksjonsverktøyet → Innstillinger"
-                  className="rounded-2xl h-96 w-full shadow-2xl shadow-blue-950/50"
-                />
-              )}
-              <div className="absolute -bottom-5 left-6 bg-white rounded-xl shadow-xl p-4 w-56 border border-gray-100">
-                <div className="flex items-center gap-1 mb-1">
-                  {[...Array(displayTestimonial.rating || 5)].map((_, i) => <StarIcon key={i} className="w-3.5 h-3.5 text-red-500" />)}
+            {/* Hero image + testimonial card */}
+            <div className="relative">
+              <HeroImage />
+
+              <div className="absolute -bottom-5 left-4 right-4 sm:left-6 sm:right-auto sm:max-w-xs bg-white rounded-xl shadow-xl p-4 sm:p-5 border border-gray-100">
+                <div className="flex gap-0.5 mb-1.5">
+                  {[...Array(5)].map((_, i) => (
+                    <StarIcon key={i} className="w-3.5 h-3.5 text-red-500" />
+                  ))}
                 </div>
-                <p className="text-xs text-gray-600 leading-snug">&ldquo;{displayTestimonial.text.slice(0, 60)}{displayTestimonial.text.length > 60 ? "…" : ""}&rdquo;</p>
-                <p className="text-xs font-semibold text-gray-900 mt-1.5">{displayTestimonial.name}</p>
+                <p className="text-gray-700 text-sm leading-snug">
+                  &ldquo;Veldig god service og de holder det de lover. Kjempefornøyd …&rdquo;
+                </p>
+                <p className="text-gray-900 font-semibold text-xs mt-2">Marius Romedal</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── STATS ── */}
-      <section className="border-b border-gray-100 bg-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 text-center">
-            {[
-              { value: "25+", label: "År i bransjen" },
-              { value: "500+", label: "Gjennomførte oppdrag" },
-              { value: "4.9★", label: "Snittkarakter" },
-              { value: "24/7", label: "Vakttelefon" },
-            ].map((s) => (
-              <div key={s.label}>
-                <p className="text-2xl sm:text-3xl font-bold text-blue-900">{s.value}</p>
-                <p className="text-xs sm:text-sm text-gray-500 mt-2">{s.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── SERVICES ── */}
-      <section className="py-12 sm:py-16 bg-gray-50">
+      <section className="py-16 sm:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8 sm:mb-10">
-            <span className="text-xs font-bold uppercase tracking-widest text-red-500">Tjenester</span>
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mt-1.5">Hva kan vi hjelpe deg med?</h2>
-            <p className="text-gray-500 text-sm sm:text-base mt-2 max-w-xl leading-relaxed">
-              Vi har høy kompetanse på mange områder innen elektrofaget og utfører alle oppdrag med faglig stolthet.
+          <div className="mb-10 sm:mb-12">
+            <p className="text-xs font-bold uppercase tracking-widest text-red-600 mb-1.5">
+              Tjenester
+            </p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 max-w-2xl">
+              Hva kan vi hjelpe deg med?
+            </h2>
+            <p className="text-gray-600 text-base mt-3 max-w-xl">
+              Vi har høy kompetanse på mange områder innen elektrofaget — og utfører hvert
+              oppdrag med faglig stolthet.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-            {services.map((s) => {
-              const Icon = s.icon;
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+            {SERVICES.map((s) => {
+              const Icon = s.Icon;
               return (
                 <Link
                   key={s.title}
                   href={s.href}
-                  className="group bg-white rounded-lg overflow-hidden border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all active:shadow-md sm:active:shadow-md"
+                  className="group bg-white rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all p-6"
                 >
-                  <div className="h-32 bg-gray-100 flex items-center justify-center">
-                    <Icon className="w-10 h-10 text-blue-800 opacity-70" />
+                  <div className="w-11 h-11 rounded-lg bg-blue-50 text-blue-900 flex items-center justify-center mb-4 group-hover:bg-blue-900 group-hover:text-white transition-colors">
+                    <Icon className="w-5 h-5" />
                   </div>
-                  <div className="p-4 sm:p-5">
-                    <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-blue-800 transition-colors text-sm sm:text-base">{s.title}</h3>
-                    <p className="text-gray-600 text-sm leading-relaxed mb-3 sm:mb-4">{s.desc}</p>
-                    <div className="flex items-center gap-1 text-blue-700 text-sm font-medium group-hover:gap-2 transition-all">
-                      Les mer <ArrowRightIcon className="w-4 h-4" />
-                    </div>
-                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-1.5 group-hover:text-blue-900 transition-colors">
+                    {s.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm leading-relaxed mb-4">{s.desc}</p>
+                  <span className="inline-flex items-center gap-1 text-sm font-semibold text-blue-900 group-hover:gap-2 transition-all">
+                    Les mer <ArrowRightIcon className="w-4 h-4" />
+                  </span>
                 </Link>
               );
             })}
@@ -265,64 +181,36 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── HOW IT WORKS ── */}
-      <section className="py-16 bg-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <span className="text-xs font-bold uppercase tracking-widest text-red-500">Enkelt og greit</span>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mt-1">Slik jobber vi</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {steps.map((step) => (
-              <div key={step.num} className="flex flex-col items-center text-center">
-                <div className="w-14 h-14 rounded-2xl bg-blue-900 text-white flex items-center justify-center font-bold text-xl mb-4 shadow-lg shadow-blue-900/20">
-                  {step.num}
-                </div>
-                <h3 className="font-bold text-gray-900 mb-2 text-lg">{step.title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{step.desc}</p>
-              </div>
-            ))}
-          </div>
-          <div className="text-center mt-10">
-            <Link
-              href="/bestilling"
-              className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold px-7 py-3 rounded-full transition-all duration-200 hover:shadow-lg"
-            >
-              Send bestilling nå <ArrowRightIcon className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* ── ABOUT ── */}
-      <section className="py-16 bg-blue-900 text-white overflow-hidden">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {aboutImageUrl ? (
-              <img
-                src={aboutImageUrl}
-                alt="Elektro Sør – team og kontor"
-                className="rounded-2xl h-72 lg:h-96 w-full object-cover"
-              />
-            ) : (
-              <ImagePlaceholder
-                label="Last opp 'Om oss'-bilde i Redaksjonsverktøyet → Innstillinger"
-                className="rounded-2xl h-72 lg:h-96 w-full"
-              />
-            )}
+      <section className="py-16 sm:py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
             <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-red-400">Om oss</span>
-              <h2 className="text-2xl md:text-3xl font-bold text-white mt-2 mb-4">Lokal elektriker – siden starten</h2>
-              <p className="text-blue-200 leading-relaxed mb-4">
-                Vi holder til i Mikkelsmyrveien 4B på Skinsnes i Mandal. Gjennom mange år har vi utført utallige oppdrag for folk og virksomheter i Mandalsregionen.
+              <p className="text-xs font-bold uppercase tracking-widest text-red-600 mb-1.5">
+                Om oss
               </p>
-              <p className="text-blue-200 leading-relaxed mb-6">
-                Blant våre største prosjekter er utbyggingen ved <strong className="text-white">GE Healthcares fabrikker</strong> og arbeidet med <strong className="text-white">Mandal Fengsel</strong>.
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-snug mb-5">
+                Lokal entreprenør — siden starten
+              </h2>
+              <p className="text-gray-700 leading-relaxed mb-4">
+                Vi holder til i Mikkelsmyrveien 4B på Skinsnes i Mandal. Gjennom mange år har vi
+                utført utallige oppdrag for folk og virksomheter i Mandalsregionen — fra én ny
+                stikkontakt til totale industriprosjekter.
               </p>
-              <ul className="space-y-2 mb-7">
-                {["Konkurransedyktige priser", "Sertifiserte fagarbeidere og mestere", "Vakttelefon utenom åpningstid", "Godkjent lærebedrift"].map((p) => (
-                  <li key={p} className="flex items-center gap-3 text-sm text-blue-100">
-                    <span className="flex-shrink-0 w-5 h-5 bg-red-600 rounded-full flex items-center justify-center">
+              <p className="text-gray-700 leading-relaxed mb-6">
+                Blant våre største er utbyggingen ved{" "}
+                <span className="font-semibold text-gray-900">GE Healthcare</span> og arbeidet
+                med <span className="font-semibold text-gray-900">Mandal Fengsel</span>.
+              </p>
+              <ul className="space-y-2.5 mb-7">
+                {[
+                  "Konkurransedyktige priser",
+                  "Sertifiserte fagarbeidere og mestere",
+                  "Vakttelefon utenom åpningstid",
+                  "Godkjent lærebedrift",
+                ].map((p) => (
+                  <li key={p} className="flex items-start gap-3 text-sm text-gray-700">
+                    <span className="flex-shrink-0 w-5 h-5 bg-red-600 rounded-full flex items-center justify-center mt-0.5">
                       <CheckIcon className="w-3 h-3 text-white" />
                     </span>
                     {p}
@@ -331,132 +219,148 @@ export default async function Home() {
               </ul>
               <Link
                 href="/om-oss"
-                className="inline-flex items-center gap-2 bg-white text-blue-900 hover:bg-blue-50 font-semibold px-6 py-3 rounded-full transition-all duration-200 text-sm"
+                className="inline-flex items-center gap-1.5 text-blue-900 font-semibold hover:gap-2.5 transition-all"
               >
                 Les mer om oss <ArrowRightIcon className="w-4 h-4" />
               </Link>
             </div>
+
+            <dl className="bg-gray-50 border border-gray-200 rounded-2xl p-6 sm:p-8 text-sm">
+              {[
+                ["Adresse", "Mikkelsmyrveien 4B, 4515 Mandal"],
+                ["Telefon", "38 27 13 90"],
+                ["E-post", "firmapost@elektro-sor.no"],
+                ["Åpningstid", "Man–fre 07:00–15:00"],
+                ["Daglig leder", "Eilef Fiskå"],
+                ["Org.nr.", "985 022 036"],
+              ].map(([k, v]) => (
+                <div
+                  key={k}
+                  className="flex justify-between gap-4 py-3 border-b border-gray-200 last:border-0"
+                >
+                  <dt className="text-gray-500">{k}</dt>
+                  <dd className="text-gray-900 font-medium text-right">{v}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </div>
       </section>
 
-      {/* ── TESTIMONIAL + REFERENCES ── */}
-      <section className="py-16 bg-gray-50">
+      {/* ── REFERANSER ── */}
+      <section className="py-16 sm:py-20 bg-gray-50 border-t border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            {/* Testimonial */}
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-8 sm:mb-10 gap-3">
             <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-red-500">Anmeldelser</span>
-              <h2 className="text-xl font-bold text-gray-900 mt-1 mb-5">Hva kundene sier</h2>
-              <div className="bg-white rounded-2xl p-7 border border-gray-100 shadow-sm relative overflow-hidden">
-                <div className="absolute top-3 right-5 text-7xl text-blue-50 font-serif leading-none select-none">&rdquo;</div>
-                <div className="flex gap-1 mb-4">
-                  {[...Array(displayTestimonial.rating || 5)].map((_, i) => <StarIcon key={i} className="w-4 h-4 text-red-500" />)}
-                </div>
-                <p className="text-gray-700 leading-relaxed mb-5 relative z-10">
-                  {displayTestimonial.text}
-                </p>
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 bg-blue-900 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">{displayTestimonial.initials}</div>
-                  <div>
-                    <p className="text-sm font-semibold text-gray-900">{displayTestimonial.name}</p>
-                    <p className="text-xs text-gray-400">{displayTestimonial.role}</p>
-                  </div>
-                </div>
-              </div>
+              <p className="text-xs font-bold uppercase tracking-widest text-red-600 mb-1.5">
+                Referanser
+              </p>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
+                Noen prosjekter vi er stolte av
+              </h2>
             </div>
+            <Link
+              href="/referanser"
+              className="inline-flex items-center gap-1.5 text-blue-900 font-semibold hover:gap-2.5 transition-all text-sm"
+            >
+              Se alle referanser <ArrowRightIcon className="w-4 h-4" />
+            </Link>
+          </div>
 
-            {/* References */}
-            <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-red-500">Referanser</span>
-              <h2 className="text-xl font-bold text-gray-900 mt-1 mb-5">Noen prosjekter vi er stolte av</h2>
-              <div className="space-y-3">
-                {refs.map((proj) => {
-                  const catLabels: Record<string, string> = { industri: "Industri", offentlig: "Offentlig", naring: "Næring", privat: "Privat" };
-                  const tag = catLabels[proj.category] ?? proj.category;
-                  const imgUrl = proj.image ? urlFor(proj.image).width(56).height(56).url() : null;
-                  return (
-                    <div key={proj._id} className="bg-white rounded-xl border border-gray-100 overflow-hidden flex card-hover">
-                      <div className="w-14 flex-shrink-0 bg-gradient-to-b from-blue-800 to-blue-900 flex items-center justify-center overflow-hidden">
-                        {imgUrl ? (
-                          <img src={imgUrl} alt={proj.title} className="w-full h-full object-cover" />
-                        ) : (
-                          <BoltIcon className="w-5 h-5 text-blue-300 opacity-50" />
-                        )}
-                      </div>
-                      <div className="px-4 py-3 flex-1">
-                        <div className="flex items-center gap-2 mb-0.5">
-                          <p className="font-semibold text-gray-900 text-sm">{proj.title}</p>
-                          <span className="text-[10px] font-medium bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">{tag}</span>
-                        </div>
-                        <p className="text-gray-500 text-xs leading-snug">{proj.description}</p>
-                      </div>
-                    </div>
-                  );
-                })}
-                <Link href="/referanser" className="inline-flex items-center gap-1.5 text-blue-800 hover:text-red-600 text-sm font-semibold mt-1 transition-colors">
-                  Se alle referanser <ArrowRightIcon className="w-3.5 h-3.5" />
-                </Link>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
+            {REFS.map((r) => (
+              <div
+                key={r.title}
+                className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-[11px] font-semibold bg-blue-50 text-blue-800 px-2 py-0.5 rounded-full">
+                    {r.tag}
+                  </span>
+                  <span className="text-xs text-gray-500">{r.location}</span>
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-1.5">{r.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{r.desc}</p>
               </div>
-            </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── MER INFORMASJON ── */}
+      <section className="py-14 sm:py-16 bg-white border-t border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-xs font-bold uppercase tracking-widest text-red-600 mb-1.5">
+            Mer om oss
+          </p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8">
+            Bli bedre kjent med Elektro Sør
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              {
+                href: "/sertifiseringer",
+                title: "Sertifiseringer",
+                desc: "Godkjenninger og medlemskap som dokumenterer kvaliteten på arbeidet vi leverer.",
+              },
+              {
+                href: "/karriere",
+                title: "Ledige stillinger",
+                desc: "Vi søker industrielektrikere, serviceelektrikere og lærlinger akkurat nå.",
+              },
+              {
+                href: "/esg",
+                title: "ESG og bærekraft",
+                desc: "Hvordan vi tar ansvar for miljø, mennesker og forretningspraksis.",
+              },
+              {
+                href: "/apenhetsloven",
+                title: "Åpenhetsloven",
+                desc: "Vår redegjørelse om menneskerettigheter og anstendige arbeidsforhold.",
+              },
+            ].map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="group bg-white border border-gray-200 rounded-xl p-5 hover:border-blue-300 hover:shadow-md transition-all"
+              >
+                <h3 className="font-semibold text-gray-900 mb-1.5 group-hover:text-blue-900">
+                  {l.title}
+                </h3>
+                <p className="text-gray-600 text-sm leading-relaxed mb-3">{l.desc}</p>
+                <span className="inline-flex items-center gap-1 text-sm font-semibold text-blue-900 group-hover:gap-2 transition-all">
+                  Les mer <ArrowRightIcon className="w-4 h-4" />
+                </span>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
 
       {/* ── CTA ── */}
-      <section className="bg-blue-900 py-14 sm:py-16">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">Trenger du elektriker?</h2>
-          <p className="text-blue-200 mb-7 sm:mb-8 text-base sm:text-lg">Kontakt oss på 38 27 13 90 eller send en bestilling – vi svarer raskt.</p>
+      <section className="bg-blue-900 text-white">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 text-center">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3">
+            Trenger du elektriker?
+          </h2>
+          <p className="text-blue-100 text-base sm:text-lg mb-7 sm:mb-8 max-w-lg mx-auto">
+            Ring oss eller send en bestilling — vi svarer raskt og kommer når vi har sagt vi
+            skal komme.
+          </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/bestilling"
-              className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold px-8 py-3 sm:py-3.5 rounded-full transition-colors text-sm sm:text-base"
+              className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold px-7 py-3.5 rounded-full"
             >
               Send bestilling <ArrowRightIcon className="w-4 h-4" />
             </Link>
             <a
               href="tel:+4738271390"
-              className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold px-8 py-3 sm:py-3.5 rounded-full transition-colors text-sm sm:text-base"
+              className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold px-7 py-3.5 rounded-full"
             >
               <PhoneIcon className="w-4 h-4" />
               38 27 13 90
             </a>
-          </div>
-        </div>
-      </section>
-
-      {/* ── CERTS ── */}
-      <section className="py-12 bg-gray-50 border-t border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-xs font-bold uppercase tracking-widest text-gray-400 mb-7">
-            Sertifiseringer og godkjenninger
-          </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            {certs ? certs.map((cert) => {
-              const logoUrl = cert.logo ? urlFor(cert.logo).height(32).url() : null;
-              return (
-                <div
-                  key={cert._id}
-                  className="bg-white border border-gray-200 rounded-full px-5 py-2 text-gray-700 text-sm font-medium flex items-center gap-2 shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-200"
-                >
-                  {logoUrl ? (
-                    <img src={logoUrl} alt={cert.name} className="h-5 w-auto" />
-                  ) : (
-                    <CheckIcon className="w-4 h-4 text-blue-800 flex-shrink-0" />
-                  )}
-                  {cert.name}
-                </div>
-              );
-            }) : FALLBACK_CERTS.map((cert) => (
-              <div
-                key={cert}
-                className="bg-white border border-gray-200 rounded-full px-5 py-2 text-gray-700 text-sm font-medium flex items-center gap-2 shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-200"
-              >
-                <CheckIcon className="w-4 h-4 text-blue-800 flex-shrink-0" />
-                {cert}
-              </div>
-            ))}
           </div>
         </div>
       </section>
